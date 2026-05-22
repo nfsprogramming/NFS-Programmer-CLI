@@ -20,6 +20,7 @@ $script:NFS_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 . "$NFS_ROOT\modules\isotools.ps1"
 . "$NFS_ROOT\modules\isos.ps1"
 . "$NFS_ROOT\modules\mywebs.ps1"
+. "$NFS_ROOT\modules\androidtools.ps1"
 . "$NFS_ROOT\modules\optimizer.ps1"
 . "$NFS_ROOT\modules\maintenance.ps1"
 . "$NFS_ROOT\modules\about.ps1"
@@ -68,6 +69,7 @@ function Show-MainMenu {
         Write-Host "  |  6.  Game Setup       - Runtimes & launchers        |" -ForegroundColor White
         Write-Host "  |  7.  ISOs             - OS downloads & tools        |" -ForegroundColor White
         Write-Host "  |  8.  My Webs          - Quick-launch links          |" -ForegroundColor White
+        Write-Host "  |  A.  Android Tools    - Termux & Hacking tools      |" -ForegroundColor White
         Write-Host "  |  0.  SYSTEM OPTIMIZER - Tweaks & Personalization    |" -ForegroundColor Green
         Write-Host "  |  M.  MAINTENANCE      - Health & Network tools      |" -ForegroundColor Green
         Write-Host "  |  9.  About            - Contact & info              |" -ForegroundColor DarkGray
@@ -86,6 +88,7 @@ function Show-MainMenu {
             "6" { Show-GameSetupMenu }
             "7" { Show-ISOsMenu }
             "8" { Show-MyWebsMenu }
+            "A" { Show-AndroidToolsMenu }
             "0" { Show-OptimizerMenu }
             "M" { Show-MaintenanceMenu }
             "9" { Show-About }
