@@ -10,6 +10,35 @@ function Write-Err { param($msg) Write-Host "  [X]  $msg" -ForegroundColor Red }
 function Write-Question { param($msg) Write-Host "  [?]  $msg" -ForegroundColor Magenta }
 function Write-Step { param($msg) Write-Host "`n  >> $msg" -ForegroundColor White }
 
+function Get-Config {
+    param([string]$Filename)
+    
+    $paths = @()
+    if ($script:NFS_ROOT) {
+        $paths += Join-Path $script:NFS_ROOT "assets\configs\$Filename"
+    }
+    if ($PSScriptRoot) {
+        $paths += Join-Path (Split-Path $PSScriptRoot -Parent) "assets\configs\$Filename"
+    }
+    $paths += Join-Path (Get-Location) "assets\configs\$Filename"
+    $paths += Join-Path (Get-Location) "..\assets\configs\$Filename"
+
+    foreach ($path in $paths) {
+        if (Test-Path $path) {
+            try {
+                $content = Get-Content $path -Raw -Encoding utf8
+                return $content | ConvertFrom-Json
+            } catch {
+                Write-Err "Failed to parse JSON config file: $Filename. Error: $($_.Exception.Message)"
+                return $null
+            }
+        }
+    }
+    
+    Write-Err "Config file not found: $Filename"
+    return $null
+}
+
 function Write-NFSProgress {
     param([string]$Task, [int]$Percent)
     $width = 40
@@ -110,56 +139,7 @@ function Show-Intro {
 }
 
 function Show-Login {
-    while ($true) {
-        Clear-Host
-        $logoPath = Join-Path (Split-Path $PSScriptRoot -Parent) "assets\logo.txt"
-        if (Test-Path $logoPath) {
-            Get-Content $logoPath -Encoding utf8 | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkRed }
-        }
-        
-        Write-Host ""
-        Write-Host "  +=====================================================+" -ForegroundColor Red
-        Write-Host "  | [!] SECURITY CLEARANCE REQUIRED : LEVEL 5 ACCESS    |" -ForegroundColor Red
-        Write-Host "  +=====================================================+" -ForegroundColor Red
-        Write-Host ""
-        
-        Write-Host "  >> ATTEMPTING ACCESS FROM: $($env:COMPUTERNAME)" -ForegroundColor DarkGray
-        Write-Host "  >> SYSTEM TIMESTAMP: $(Get-Date -Format 'HH:mm:ss')" -ForegroundColor DarkGray
-        Write-Host ""
-        
-        # Biometric Simulation
-        Write-Host "  [SCANNING BIOMETRICS] " -NoNewline -ForegroundColor White
-        $block = [char]0x2588
-        for ($i = 0; $i -lt 15; $i++) {
-            Write-Host $block -NoNewline -ForegroundColor Red
-            Start-Sleep -Milliseconds (Get-Random -Minimum 20 -Maximum 80)
-        }
-        Write-Host " [MATCH]" -ForegroundColor Green
-        Write-Host ""
-
-        Write-Host "  IDENTIFIER : " -NoNewline -ForegroundColor White
-        $enteredUser = Read-Host
-        
-        Write-Host "  PASS-CODE  : " -NoNewline -ForegroundColor White
-        $enteredPass = Read-Host -AsSecureString
-        $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($enteredPass)
-        $enteredPassPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto($ptr)
-        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr)
-
-        Write-Host ""
-        Write-Indeterminate-Bar "AUTH_SEQUENCING"
-        Start-Sleep -Milliseconds 800
-
-        if ($enteredUser.Trim().ToUpper() -eq "NFS" -and $enteredPassPlain -eq "2GdwEMEyhPp@4UQ") {
-            Write-Success "IDENTITY CONFIRMED. Access granted to NFS."
-            Start-Sleep -Milliseconds 1200
-            return $true
-        }
-        else {
-            Write-Err "CREDENTIAL MISMATCH. Unauthorized attempt logged."
-            Start-Sleep -Milliseconds 2000
-        }
-    }
+    return $true
 }
 
 function Pause-Menu {
@@ -187,6 +167,29 @@ function Assert-Admin {
         Write-Warn "Some features require Administrator rights."
         Write-Warn "Right-click the script and choose 'Run as Administrator'."
         return $false
+    }
+    return $true
+}
+
+function Assert-Winget {
+    $hasWinget = Get-Command winget -ErrorAction SilentlyContinue
+    if (-not $hasWinget) {
+        Write-Warn "winget is not installed or not found in PATH."
+        Write-Info "Attempting to install winget..."
+        try {
+            $wingetUrl = "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+            $tempPath = Join-Path $env:TEMP "winget.msixbundle"
+            Write-Step "Downloading winget package..."
+            Invoke-WebRequest -Uri $wingetUrl -OutFile $tempPath -UseBasicParsing
+            Write-Step "Installing winget package..."
+            Add-AppxPackage -Path $tempPath
+            Write-Success "winget installed successfully."
+            Remove-Item $tempPath -ErrorAction SilentlyContinue
+            return $true
+        } catch {
+            Write-Err "Could not auto-install winget. Please install it manually from the Microsoft Store."
+            return $false
+        }
     }
     return $true
 }
