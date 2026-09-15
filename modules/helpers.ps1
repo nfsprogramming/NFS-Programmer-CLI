@@ -1,14 +1,79 @@
 # ============================================================
-#  NFS CLI - helpers.ps1
+#  NFS CLI V2 - helpers.ps1
 #  Shared utility functions used across all modules
 # ============================================================
 
-function Write-Success { param($msg) Write-Host "  [OK] $msg" -ForegroundColor Green }
-function Write-Info { param($msg) Write-Host "  [i]  $msg" -ForegroundColor Cyan }
-function Write-Warn { param($msg) Write-Host "  [!]  $msg" -ForegroundColor Yellow }
-function Write-Err { param($msg) Write-Host "  [X]  $msg" -ForegroundColor Red }
-function Write-Question { param($msg) Write-Host "  [?]  $msg" -ForegroundColor Magenta }
-function Write-Step { param($msg) Write-Host "`n  >> $msg" -ForegroundColor White }
+function Write-Success {
+    param($msg)
+    Write-Host "  [OK] $msg" -ForegroundColor Green
+    if (Get-Command Write-NFSLog -ErrorAction SilentlyContinue) { Write-NFSLog "[OK] $msg" -Level "INFO" }
+}
+
+function Write-Info {
+    param($msg)
+    Write-Host "  [i]  $msg" -ForegroundColor Cyan
+    if (Get-Command Write-NFSLog -ErrorAction SilentlyContinue) { Write-NFSLog "[i] $msg" -Level "INFO" }
+}
+
+function Write-Warn {
+    param($msg)
+    Write-Host "  [!]  $msg" -ForegroundColor Yellow
+    if (Get-Command Write-NFSLog -ErrorAction SilentlyContinue) { Write-NFSLog "[!] $msg" -Level "WARN" }
+}
+
+function Write-Err {
+    param($msg)
+    Write-Host "  [X]  $msg" -ForegroundColor Red
+    if (Get-Command Write-NFSLog -ErrorAction SilentlyContinue) { Write-NFSLog "[X] $msg" -Level "ERROR" }
+}
+
+function Write-Question {
+    param($msg)
+    Write-Host "  [?]  $msg" -ForegroundColor Magenta
+}
+
+function Write-Step {
+    param($msg)
+    Write-Host "`n  >> $msg" -ForegroundColor White
+    if (Get-Command Write-NFSLog -ErrorAction SilentlyContinue) { Write-NFSLog "Step: $msg" -Level "DEBUG" }
+}
+
+function Write-SafeError {
+    param(
+        [string]$Operation,
+        [string]$Reason,
+        [string]$SuggestedAction
+    )
+    Write-Host ""
+    Write-Host "  [✗] $Operation failed" -ForegroundColor Red
+    if ($Reason) {
+        Write-Host ""
+        Write-Host "  Reason:" -ForegroundColor DarkGray
+        Write-Host "  $Reason" -ForegroundColor Yellow
+    }
+    if ($SuggestedAction) {
+        Write-Host ""
+        Write-Host "  Suggested action:" -ForegroundColor DarkGray
+        Write-Host "  $SuggestedAction" -ForegroundColor Cyan
+    }
+    Write-Host ""
+    if (Get-Command Write-NFSLog -ErrorAction SilentlyContinue) {
+        Write-NFSLog "Operation failed: $Operation. Reason: $Reason" -Level "ERROR"
+    }
+}
+
+function Confirm-DangerousAction {
+    param(
+        [string]$ActionName,
+        [string]$WarningDetails = "This operation may modify system configuration."
+    )
+    Write-Host ""
+    Write-Host "  [!] CONFIRMATION REQUIRED" -ForegroundColor Yellow
+    Write-Host "  $WarningDetails" -ForegroundColor Gray
+    Write-Host ""
+    $resp = (Read-Host "  Continue with $ActionName? [Y/N]").Trim().ToUpper()
+    return ($resp -eq "Y")
+}
 
 function Get-Config {
     param([string]$Filename)
@@ -72,6 +137,13 @@ function Write-Section {
 }
 
 function Show-Intro {
+    if (Get-Command Invoke-CinematicIntro -ErrorAction SilentlyContinue) {
+        $cfg = if ($script:NFS_CONFIG) { $script:NFS_CONFIG } else { [PSCustomObject]@{ animations = "full"; animation_speed = "normal" } }
+        $ver = if ($script:NFS_VERSION_INFO) { $script:NFS_VERSION_INFO } else { [PSCustomObject]@{ version = "2.0.0"; tagline = "Windows Developer & System Toolkit" } }
+        Invoke-CinematicIntro -Config $cfg -VersionInfo $ver
+        return
+    }
+
     Clear-Host
     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
     

@@ -1,0 +1,8 @@
+{
+  "animations": "full",
+  "animation_speed": "normal",
+  "update_check": true,
+  "update_channel": "stable",
+  "logging": true,
+  "theme": "nfs-neon"
+}

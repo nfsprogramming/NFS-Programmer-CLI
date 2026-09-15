@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "build": 200,
+  "releaseDate": "2026-09-15",
+  "productName": "NFS Programmer CLI",
+  "tagline": "Windows Developer & System Engineering Toolkit",
+  "repository": "nfsprogramming/nfs-cli",
+  "channel": "stable",
+  "author": "NIFRAS"
+}
