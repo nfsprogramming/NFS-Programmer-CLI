@@ -27,11 +27,15 @@ function Show-PerformanceCenter {
         $sysDrive = Get-PSDrive -Name ($env:SystemDrive.TrimEnd(':')) -ErrorAction SilentlyContinue
         $diskPct = [Math]::Round((($sysDrive.Used) / ($sysDrive.Used + $sysDrive.Free)) * 100, 0)
 
+        $cpuColor = if ($cpuLoad -gt 85) { "Red" } elseif ($cpuLoad -gt 60) { "Yellow" } else { "Green" }
+        $memColor = if ($pctMem -gt 85) { "Red" } elseif ($pctMem -gt 70) { "Yellow" } else { "Green" }
+        $diskColor = if ($diskPct -gt 85) { "Red" } elseif ($diskPct -gt 70) { "Yellow" } else { "Green" }
+
         Write-Host "  CURRENT SYSTEM UTILIZATION" -ForegroundColor Yellow
         Write-HR "-" 56
-        Write-Host ("  CPU Usage  : {0,3}%" -f $cpuLoad) -ForegroundColor (if ($cpuLoad -gt 85) { "Red" } else { "Green" })
-        Write-Host ("  RAM Usage  : {0,3}%  ({1} GB / {2} GB)" -f $pctMem, $usedMemGB, $totalMemGB) -ForegroundColor (if ($pctMem -gt 85) { "Red" } else { "Green" })
-        Write-Host ("  Disk ($($sysDrive.Name):)  : {0,3}% used" -f $diskPct) -ForegroundColor (if ($diskPct -gt 85) { "Red" } else { "Green" })
+        Write-Host ("  CPU Usage  : {0,3}%" -f $cpuLoad) -ForegroundColor $cpuColor
+        Write-Host ("  RAM Usage  : {0,3}%  ({1} GB / {2} GB)" -f $pctMem, $usedMemGB, $totalMemGB) -ForegroundColor $memColor
+        Write-Host ("  Disk ($($sysDrive.Name):)  : {0,3}% used" -f $diskPct) -ForegroundColor $diskColor
         Write-HR "-" 56
         Write-Host ""
 
@@ -64,10 +68,12 @@ function Show-PerformanceCenter {
 function Show-TopProcesses {
     param([ValidateSet("WS", "CPU")][string]$SortBy = "WS")
     Clear-Host
-    Write-Section "TOP PROCESSES BY $(if ($SortBy -eq 'WS') { 'MEMORY (MB)' } else { 'CPU TIME (SEC)' })"
+    $sortTitle = if ($SortBy -eq 'WS') { 'MEMORY (MB)' } else { 'CPU TIME (SEC)' }
+    Write-Section "TOP PROCESSES BY $sortTitle"
     Write-Host ""
 
-    $procs = Get-Process | Sort-Object -Property (if ($SortBy -eq "WS") { "WorkingSet64" } else { "CPU" }) -Descending | Select-Object -First 15
+    $sortProp = if ($SortBy -eq "WS") { "WorkingSet64" } else { "CPU" }
+    $procs = Get-Process | Sort-Object -Property $sortProp -Descending | Select-Object -First 15
 
     Write-Host ("  {0,-8} {1,-26} {2,10} {3,10}" -f "PID", "NAME", "RAM (MB)", "CPU (SEC)") -ForegroundColor DarkYellow
     Write-HR "-" 60

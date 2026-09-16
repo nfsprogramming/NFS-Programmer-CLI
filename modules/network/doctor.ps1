@@ -156,7 +156,8 @@ function Test-PingPacketLoss {
             $pings = Test-Connection -ComputerName $hostIp -Count 4 -ErrorAction Stop
             $avgTime = [Math]::Round(($pings | Measure-Object -Property ResponseTime -Average).Average, 1)
             $lossCount = 4 - $pings.Count
-            Write-Host "  Results for $hostIp : Received $($pings.Count)/4, Avg Latency: $avgTime ms, Loss: $lossCount" -ForegroundColor (if ($lossCount -eq 0) { "Green" } else { "Yellow" })
+            $lossColor = if ($lossCount -eq 0) { "Green" } else { "Yellow" }
+            Write-Host "  Results for $hostIp : Received $($pings.Count)/4, Avg Latency: $avgTime ms, Loss: $lossCount" -ForegroundColor $lossColor
         } catch {
             Write-Host "  Ping to $hostIp failed or timed out." -ForegroundColor Red
         }

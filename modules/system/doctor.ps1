@@ -189,7 +189,8 @@ function Invoke-SystemDoctor {
     $action = (Read-Host "  Select").Trim().ToUpper()
     switch ($action) {
         "1" {
-            $reportFile = Join-Path (if ($script:NFS_LOG_DIR) { $script:NFS_LOG_DIR } else { "$env:TEMP" }) "system_doctor_report.txt"
+            $targetDir = if ($script:NFS_LOG_DIR) { $script:NFS_LOG_DIR } else { "$env:TEMP" }
+            $reportFile = Join-Path $targetDir "system_doctor_report.txt"
             $sb = [System.Text.StringBuilder]::new()
             [void]$sb.AppendLine("NFS PROGRAMMER CLI - SYSTEM DOCTOR REPORT")
             [void]$sb.AppendLine("Generated: $(Get-Date)")
