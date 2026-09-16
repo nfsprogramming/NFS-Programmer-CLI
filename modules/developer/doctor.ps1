@@ -40,7 +40,7 @@ function Get-DevToolStatus {
                 $proc = [System.Diagnostics.Process]::Start($psi)
                 $output = $proc.StandardOutput.ReadToEnd()
                 $errorOut = $proc.StandardError.ReadToEnd()
-                $proc.WaitForExit(1000)
+                [void]$proc.WaitForExit(1000)
 
                 $rawOut = if (-not [string]::IsNullOrWhiteSpace($output)) { $output } else { $errorOut }
                 if ($rawOut) {
@@ -110,14 +110,17 @@ function Show-DeveloperDoctor {
         Write-HR "-" 64
         Write-Host ""
 
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkBlue
-        Write-Host "  |  1.  Install a Missing Tool via Winget              |" -ForegroundColor Cyan
-        Write-Host "  |  2.  Refresh Environment Audit                      |" -ForegroundColor White
-        Write-Host "  |  B.  Back                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkBlue
+        Write-Host "  AUDIT ACTIONS" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Cyan -NoNewline; Write-Host "Install a Missing Tool via Winget" -ForegroundColor White
+        Write-Host "    [2] " -ForegroundColor White -NoNewline; Write-Host "Refresh Environment Audit" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  NAVIGATION" -ForegroundColor Yellow
+        Write-Host "    [B] " -ForegroundColor DarkGray -NoNewline; Write-Host "Back" -ForegroundColor White
+        Write-Host ("  " + ("=" * 64)) -ForegroundColor DarkBlue
         Write-Host ""
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host "  >> Select option: " -ForegroundColor Cyan -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" {
                 if ($missingWithWinget.Count -eq 0) {
