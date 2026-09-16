@@ -13,22 +13,27 @@ function Show-PackageManagerMenu {
         Clear-Host
         Write-Section "PACKAGE MANAGEMENT (WINGET STUDIO)"
         Write-Host ""
+        Write-Host "  :: WINGET PACKAGE STUDIO" -ForegroundColor Cyan
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkCyan
         Write-Host "  Manage Windows applications, runtimes, and developer packages using official Winget." -ForegroundColor DarkGray
         Write-Host ""
 
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkCyan
-        Write-Host "  |  1.  Search Packages                                |" -ForegroundColor Cyan
-        Write-Host "  |  2.  Install Package by ID or Name                  |" -ForegroundColor Cyan
-        Write-Host "  |  3.  Check for App Updates (winget upgrade)         |" -ForegroundColor Yellow
-        Write-Host "  |  4.  Upgrade All Installed Apps                     |" -ForegroundColor Green
-        Write-Host "  |  5.  Uninstall an Application                       |" -ForegroundColor Red
-        Write-Host "  |  6.  Export Installed Packages List (JSON)          |" -ForegroundColor White
-        Write-Host "  |  7.  Import Packages List (Batch Install)           |" -ForegroundColor White
-        Write-Host "  |  B.  Back                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkCyan
+        Write-Host "  OPERATIONS" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Cyan -NoNewline; Write-Host "Search Packages" -ForegroundColor White
+        Write-Host "    [2] " -ForegroundColor Cyan -NoNewline; Write-Host "Install Package by ID or Name" -ForegroundColor White
+        Write-Host "    [3] " -ForegroundColor Yellow -NoNewline; Write-Host "Check for App Updates (winget upgrade)" -ForegroundColor White
+        Write-Host "    [4] " -ForegroundColor Green -NoNewline; Write-Host "Upgrade All Installed Apps" -ForegroundColor White
+        Write-Host "    [5] " -ForegroundColor Red -NoNewline; Write-Host "Uninstall an Application" -ForegroundColor White
+        Write-Host "    [6] " -ForegroundColor White -NoNewline; Write-Host "Export Installed Packages List (JSON)" -ForegroundColor White
+        Write-Host "    [7] " -ForegroundColor White -NoNewline; Write-Host "Import Packages List (Batch Install)" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  NAVIGATION" -ForegroundColor Yellow
+        Write-Host "    [B] " -ForegroundColor DarkGray -NoNewline; Write-Host "Back" -ForegroundColor White
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkCyan
         Write-Host ""
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host "  >> Select option: " -ForegroundColor Cyan -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" { Invoke-WingetSearch }
             "2" { Invoke-WingetInstallPrompt }

@@ -11,17 +11,20 @@ function Show-EventLogAnalyzer {
         Write-Host "  Inspect recent Windows diagnostic, application, and system events." -ForegroundColor DarkGray
         Write-Host ""
 
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkRed
-        Write-Host "  |  1.  System Events (Critical & Error - Last 24h)    |" -ForegroundColor Red
-        Write-Host "  |  2.  Application Events (Errors & Warnings)         |" -ForegroundColor Yellow
-        Write-Host "  |  3.  Hardware & Driver Error Events                 |" -ForegroundColor Cyan
-        Write-Host "  |  4.  Custom Filter (By Event Level & Count)         |" -ForegroundColor White
-        Write-Host "  |  5.  Export Recent Event Summary to File            |" -ForegroundColor Green
-        Write-Host "  |  B.  Back                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkRed
+        Write-Host "  LOG INSPECTION" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Red -NoNewline; Write-Host "System Events (Critical & Error - Last 24h)" -ForegroundColor White
+        Write-Host "    [2] " -ForegroundColor Yellow -NoNewline; Write-Host "Application Events (Errors & Warnings)" -ForegroundColor White
+        Write-Host "    [3] " -ForegroundColor Cyan -NoNewline; Write-Host "Hardware & Driver Error Events" -ForegroundColor White
+        Write-Host "    [4] " -ForegroundColor White -NoNewline; Write-Host "Custom Filter (By Event Level & Count)" -ForegroundColor White
+        Write-Host "    [5] " -ForegroundColor Green -NoNewline; Write-Host "Export Recent Event Summary to File" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  NAVIGATION" -ForegroundColor Yellow
+        Write-Host "    [B] " -ForegroundColor DarkGray -NoNewline; Write-Host "Back" -ForegroundColor White
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkRed
         Write-Host ""
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host "  >> Select option: " -ForegroundColor Red -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" { Inspect-Events -LogName "System" -Levels @(1, 2) -Max 15 -Title "CRITICAL & ERROR SYSTEM EVENTS" }
             "2" { Inspect-Events -LogName "Application" -Levels @(2, 3) -Max 15 -Title "APPLICATION ERRORS & WARNINGS" }

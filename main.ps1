@@ -128,16 +128,21 @@ if ($script:NFS_LAST_CHECK_RESULT -and $script:NFS_LAST_CHECK_RESULT.hasUpdate) 
     Show-UpdateBanner -CheckResult $script:NFS_LAST_CHECK_RESULT
 }
 
-# V2 Dashboard Function
-function Show-V2Dashboard {
-    $chk = [char]0x2713
-
+# Unified Main Menu (ASCII Logo + Full V1 Workflows + V2 Engineering Tools)
+function Show-MainMenu {
     while ($true) {
         [Console]::BackgroundColor = 'Black'
         Write-Host "`e[48;2;0;0;0m" -NoNewline
         Clear-Host
 
-        # Query Live System Metrics
+        # Display Iconic NFS Logo
+        $logoPath = "$script:NFS_ROOT\assets\logo.txt"
+        if (Test-Path $logoPath) {
+            Write-Host ""
+            Get-Content $logoPath -Encoding utf8 | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+        }
+
+        # Query Live System Metrics for telemetry ribbon
         $cpuLoad = "N/A"
         try {
             $perf = Get-CimInstance Win32_PerfFormattedData_PerfOS_Processor | Where-Object { $_.Name -eq "_Total" }
@@ -162,14 +167,6 @@ function Show-V2Dashboard {
             $diskInfo = "$pct% ($($d.Name):)"
         } catch {}
 
-        $gpuName = "N/A"
-        try {
-            $gpu = Get-CimInstance Win32_VideoController | Select-Object -First 1
-            if ($gpu) {
-                $gpuName = if ($gpu.Name.Length -gt 24) { $gpu.Name.Substring(0, 21) + "..." } else { $gpu.Name }
-            }
-        } catch {}
-
         $uptimeStr = "N/A"
         try {
             $bootTime = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
@@ -177,96 +174,70 @@ function Show-V2Dashboard {
             $uptimeStr = "{0}d {1}h {2}m" -f $diff.Days, $diff.Hours, $diff.Minutes
         } catch {}
 
-        # Render Dashboard Card
         Write-Host ""
-        Write-Host "  +==============================================================+" -ForegroundColor DarkRed
-        Write-Host "  |                    NFS PROGRAMMER CLI                        |" -ForegroundColor Red
-        Write-Host "  |                         v$($versionInfo.version.PadRight(10))                          |" -ForegroundColor DarkRed
-        Write-Host "  +--------------------------------------------------------------+" -ForegroundColor DarkRed
-        Write-Host "  |  Welcome back, $env:USERNAME @ $env:COMPUTERNAME" -ForegroundColor White
-        Write-Host "  |                                                              |" -ForegroundColor DarkRed
-        Write-Host "  |  SYSTEM METRICS                                              |" -ForegroundColor Yellow
-        Write-Host ("  |  CPU    : {0,-12} RAM    : {1,-14} DISK  : {2,-11}|" -f $cpuLoad, $ramInfo, $diskInfo) -ForegroundColor White
-        Write-Host ("  |  GPU    : {0,-12} UPTIME : {1,-14} STATUS: [$chk] Healthy  |" -f $gpuName, $uptimeStr) -ForegroundColor White
-        Write-Host "  |                                                              |" -ForegroundColor DarkRed
-        Write-Host "  |  V2 QUICK ACTIONS                                            |" -ForegroundColor Yellow
-        Write-Host "  |  [1] System Health (Doctor)     [2] Network Doctor           |" -ForegroundColor Cyan
-        Write-Host "  |  [3] Developer Doctor           [4] Cleanup & Maintenance    |" -ForegroundColor Cyan
-        Write-Host "  |  [5] App & Package Manager      [6] Event Logs & Diagnostics |" -ForegroundColor Cyan
-        Write-Host "  |  [7] Performance Center         [L] Classic V1 Menus         |" -ForegroundColor Cyan
-        Write-Host "  |                                                              |" -ForegroundColor DarkRed
-        Write-Host "  |  UTILITIES & CONFIGURATION                                   |" -ForegroundColor Yellow
-        Write-Host "  |  [U] Update & Rollback Center   [S] Settings & Theme         |" -ForegroundColor White
-        Write-Host "  |  [A] About NFS CLI              [Q] Quit                     |" -ForegroundColor DarkGray
-        Write-Host "  +==============================================================+" -ForegroundColor DarkRed
-        Write-Host ""
+        Write-Host "  :: NFS PROGRAMMER CLI " -ForegroundColor Red -NoNewline
+        Write-Host "v$($versionInfo.version) " -ForegroundColor DarkGray -NoNewline
+        Write-Host "-- Windows Developer & System Engineering" -ForegroundColor Gray
+        Write-Host ("  " + ("=" * 72)) -ForegroundColor DarkRed
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
-        switch ($choice) {
-            "1" { Invoke-SystemDoctor }
-            "2" { Show-NetworkDoctor }
-            "3" { Show-DeveloperDoctor }
-            "4" { Show-MaintenanceMenu }
-            "5" { Show-PackageManagerMenu }
-            "6" { Show-EventLogAnalyzer }
-            "7" { Show-PerformanceCenter }
-            "L" { Show-LegacyV1Menu }
-            "U" { Show-UpdateMenu }
-            "S" { Show-SettingsMenu }
-            "A" { Show-About }
-            "Q" {
-                Clear-Host
-                Write-Host "`n  Goodbye $env:USERNAME. Stay productive. [Rocket]" -ForegroundColor Red
-                Start-Sleep 1
-                exit
-            }
-            default {
-                Write-Warn "Invalid option."
-                Start-Sleep 1
-            }
-        }
-    }
-}
-
-# Dedicated V1 Classic Menu Bridge (100% Exact V1 Menu Workflows)
-function Show-LegacyV1Menu {
-    while ($true) {
-        [Console]::BackgroundColor = 'Black'
-        Write-Host "`e[48;2;0;0;0m" -NoNewline
-        Clear-Host
-
-        $logoPath = "$script:NFS_ROOT\assets\logo.txt"
-        if (Test-Path $logoPath) {
-            Write-Host ""
-            Get-Content $logoPath -Encoding utf8 | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
-        }
+        # System Telemetry Ribbon
+        Write-Host "  * Host: " -ForegroundColor DarkGray -NoNewline
+        Write-Host "$env:USERNAME@$env:COMPUTERNAME" -ForegroundColor White -NoNewline
+        Write-Host "   * CPU: " -ForegroundColor DarkGray -NoNewline
+        Write-Host "$cpuLoad" -ForegroundColor Cyan -NoNewline
+        Write-Host "   * RAM: " -ForegroundColor DarkGray -NoNewline
+        Write-Host "$ramInfo" -ForegroundColor Cyan -NoNewline
+        Write-Host "   * Disk: " -ForegroundColor DarkGray -NoNewline
+        Write-Host "$diskInfo" -ForegroundColor Cyan -NoNewline
+        Write-Host "   * Uptime: " -ForegroundColor DarkGray -NoNewline
+        Write-Host "$uptimeStr" -ForegroundColor DarkGray
 
         Write-Host ""
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkRed
-        Write-Host "  |         NFS PROGRAMMER CLI - CLASSIC V1 MENU        |" -ForegroundColor DarkRed
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkRed
-        Write-Host ""
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor Red
-        Write-Host "  |  1.  Scripts          - Activators & Fixes          |" -ForegroundColor White
-        Write-Host "  |  2.  Tools            - Essentials (Chrome, Office) |" -ForegroundColor White
-        Write-Host "  |  3.  Dev Kit          - Developer environment setup |" -ForegroundColor White
-        Write-Host "  |  4.  Driver Update    - Auto-detect & install       |" -ForegroundColor White
-        Write-Host "  |  5.  Custom Apps      - Pro user selections         |" -ForegroundColor White
-        Write-Host "  |  6.  Game Setup       - Runtimes & launchers        |" -ForegroundColor White
-        Write-Host "  |  7.  ISOs             - OS downloads & tools        |" -ForegroundColor White
-        Write-Host "  |  8.  My Webs          - Quick-launch links          |" -ForegroundColor White
-        Write-Host "  |  P.  Python Scripts   - Automation & Tools          |" -ForegroundColor Magenta
-        Write-Host "  |  0.  SYSTEM OPTIMIZER - Tweaks & Personalization    |" -ForegroundColor Green
-        Write-Host "  |  M.  MAINTENANCE      - Health & Network tools      |" -ForegroundColor Green
-        Write-Host "  |  9.  About            - Contact & info              |" -ForegroundColor DarkGray
-        Write-Host "  |  B.  Back to V2 Dashboard                           |" -ForegroundColor Cyan
-        Write-Host "  |  Q.  Quit                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor Red
-        Write-Host ""
+        Write-Host "  V2 TOOLS & DOCTORS" -ForegroundColor Yellow
+        Write-Host "    [D] " -ForegroundColor Cyan -NoNewline; Write-Host "System Doctor      " -ForegroundColor White -NoNewline; Write-Host "Deep hardware, services & driver diagnostic" -ForegroundColor DarkGray
+        Write-Host "    [N] " -ForegroundColor Cyan -NoNewline; Write-Host "Network Doctor     " -ForegroundColor White -NoNewline; Write-Host "Ping, DNS latency, resets & adapter tools" -ForegroundColor DarkGray
+        Write-Host "    [V] " -ForegroundColor Cyan -NoNewline; Write-Host "Developer Doctor   " -ForegroundColor White -NoNewline; Write-Host "Git, Python, Node.js, compilers & SDKs" -ForegroundColor DarkGray
+        Write-Host "    [W] " -ForegroundColor Cyan -NoNewline; Write-Host "Winget Studio      " -ForegroundColor White -NoNewline; Write-Host "App & package manager: search, upgrade all" -ForegroundColor DarkGray
+        Write-Host "    [E] " -ForegroundColor Cyan -NoNewline; Write-Host "Event Logs         " -ForegroundColor White -NoNewline; Write-Host "Critical errors & system log inspector" -ForegroundColor DarkGray
+        Write-Host "    [F] " -ForegroundColor Cyan -NoNewline; Write-Host "Performance        " -ForegroundColor White -NoNewline; Write-Host "Real-time CPU/RAM monitor & process manager" -ForegroundColor DarkGray
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host ""
+        Write-Host "  CORE WORKFLOWS" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Cyan -NoNewline; Write-Host "Scripts            " -ForegroundColor White -NoNewline; Write-Host "Activators, Windows fixes & debloater" -ForegroundColor DarkGray
+        Write-Host "    [2] " -ForegroundColor Cyan -NoNewline; Write-Host "Tools              " -ForegroundColor White -NoNewline; Write-Host "Essentials (Chrome, Office, 7-Zip, VLC)" -ForegroundColor DarkGray
+        Write-Host "    [3] " -ForegroundColor Cyan -NoNewline; Write-Host "Dev Kit            " -ForegroundColor White -NoNewline; Write-Host "Developer environments & compilers" -ForegroundColor DarkGray
+        Write-Host "    [4] " -ForegroundColor Cyan -NoNewline; Write-Host "Driver Update      " -ForegroundColor White -NoNewline; Write-Host "Auto-detect & install hardware drivers" -ForegroundColor DarkGray
+        Write-Host "    [5] " -ForegroundColor Cyan -NoNewline; Write-Host "Custom Apps        " -ForegroundColor White -NoNewline; Write-Host "Power user applications" -ForegroundColor DarkGray
+        Write-Host "    [6] " -ForegroundColor Cyan -NoNewline; Write-Host "Game Setup         " -ForegroundColor White -NoNewline; Write-Host "Runtimes, DirectX & launchers" -ForegroundColor DarkGray
+        Write-Host "    [7] " -ForegroundColor Cyan -NoNewline; Write-Host "ISOs Hub           " -ForegroundColor White -NoNewline; Write-Host "Windows & Linux OS downloads" -ForegroundColor DarkGray
+        Write-Host "    [8] " -ForegroundColor Cyan -NoNewline; Write-Host "My Webs            " -ForegroundColor White -NoNewline; Write-Host "Developer bookmarks & quick links" -ForegroundColor DarkGray
+        Write-Host "    [P] " -ForegroundColor Magenta -NoNewline; Write-Host "Python Scripts     " -ForegroundColor White -NoNewline; Write-Host "Automation tools & organizers" -ForegroundColor DarkGray
+        Write-Host "    [0] " -ForegroundColor Green -NoNewline; Write-Host "System Optimizer   " -ForegroundColor White -NoNewline; Write-Host "Deep OS tweaks & personalization" -ForegroundColor DarkGray
+        Write-Host "    [M] " -ForegroundColor Green -NoNewline; Write-Host "Maintenance        " -ForegroundColor White -NoNewline; Write-Host "Health, SFC, DISM & network resets" -ForegroundColor DarkGray
+        Write-Host "    [9] " -ForegroundColor DarkGray -NoNewline; Write-Host "About              " -ForegroundColor White -NoNewline; Write-Host "NFS info & credits" -ForegroundColor DarkGray
+
+        Write-Host ""
+        Write-Host "  CONFIGURATION & CONTROL" -ForegroundColor Yellow
+        Write-Host "    [U] " -ForegroundColor Magenta -NoNewline; Write-Host "Update Center      " -ForegroundColor White -NoNewline; Write-Host "Check updates & rollback engine" -ForegroundColor DarkGray
+        Write-Host "    [S] " -ForegroundColor DarkCyan -NoNewline; Write-Host "Settings           " -ForegroundColor White -NoNewline; Write-Host "Terminal theme & animation config" -ForegroundColor DarkGray
+        Write-Host "    [Q] " -ForegroundColor DarkRed -NoNewline; Write-Host "Quit CLI" -ForegroundColor DarkRed
+
+        Write-Host ""
+        Write-Host ("  " + ("=" * 72)) -ForegroundColor DarkRed
+        Write-Host ""
+        Write-Host "  >> Select option: " -ForegroundColor Red -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
 
         switch ($choice) {
+            # V2 Tools & Doctors
+            "D" { Invoke-SystemDoctor }
+            "N" { Show-NetworkDoctor }
+            "V" { Show-DeveloperDoctor }
+            "W" { Show-PackageManagerMenu }
+            "E" { Show-EventLogAnalyzer }
+            "F" { Show-PerformanceCenter }
+
+            # Core Workflows (100% Exact V1 keys preserved)
             "1" { Show-ScriptsMenu }
             "2" { Show-ToolsMenu }
             "3" { Show-DevKitMenu }
@@ -279,7 +250,10 @@ function Show-LegacyV1Menu {
             "0" { Show-OptimizerMenu }
             "M" { Show-MaintenanceMenu }
             "9" { Show-About }
-            "B" { return }
+
+            # Config & Control
+            "U" { Show-UpdateMenu }
+            "S" { Show-SettingsMenu }
             "Q" {
                 Clear-Host
                 Write-Host "`n  Goodbye $env:USERNAME. Stay productive." -ForegroundColor Red
@@ -294,10 +268,10 @@ function Show-LegacyV1Menu {
     }
 }
 
-# Compatibility alias for Show-MainMenu
-function Show-MainMenu {
-    Show-V2Dashboard
+# Compatibility alias
+function Show-V2Dashboard {
+    Show-MainMenu
 }
 
-# Launch Dashboard
-Show-V2Dashboard
+# Launch Menu
+Show-MainMenu

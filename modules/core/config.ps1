@@ -125,20 +125,29 @@ function Show-SettingsMenu {
         $updateStatus = if ($cfg.update_check) { "Enabled" } else { "Disabled" }
         $logStatus = if ($cfg.logging) { "Enabled" } else { "Disabled" }
 
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkCyan
-        Write-Host "  |  1.  Startup Animation    : $animStatus" -ForegroundColor White
-        Write-Host "  |  2.  Animation Speed      : $speedStatus" -ForegroundColor White
-        Write-Host "  |  3.  Auto Update Check    : $updateStatus" -ForegroundColor White
-        Write-Host "  |  4.  Update Channel       : $($cfg.update_channel)" -ForegroundColor White
-        Write-Host "  |  5.  Operation Logging    : $logStatus" -ForegroundColor White
-        Write-Host "  |  6.  Interface Theme      : $($cfg.theme)" -ForegroundColor White
-        Write-Host "  |  7.  View Application Logs                          |" -ForegroundColor Cyan
-        Write-Host "  |  8.  Reset to Defaults                              |" -ForegroundColor Yellow
-        Write-Host "  |  B.  Back                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkCyan
+        Write-Host ""
+        Write-Host "  :: SETTINGS & TERMINAL APPEARANCE" -ForegroundColor Cyan
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkCyan
+        Write-Host ""
+        Write-Host "  PREFERENCES" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Cyan -NoNewline; Write-Host ("Startup Animation    : {0}" -f $animStatus) -ForegroundColor White
+        Write-Host "    [2] " -ForegroundColor Cyan -NoNewline; Write-Host ("Animation Speed      : {0}" -f $speedStatus) -ForegroundColor White
+        Write-Host "    [3] " -ForegroundColor Cyan -NoNewline; Write-Host ("Auto Update Check    : {0}" -f $updateStatus) -ForegroundColor White
+        Write-Host "    [4] " -ForegroundColor Cyan -NoNewline; Write-Host ("Update Channel       : {0}" -f $cfg.update_channel) -ForegroundColor White
+        Write-Host "    [5] " -ForegroundColor Cyan -NoNewline; Write-Host ("Operation Logging    : {0}" -f $logStatus) -ForegroundColor White
+        Write-Host "    [6] " -ForegroundColor Cyan -NoNewline; Write-Host ("Interface Theme      : {0}" -f $cfg.theme) -ForegroundColor White
+        Write-Host ""
+        Write-Host "  UTILITIES" -ForegroundColor Yellow
+        Write-Host "    [7] " -ForegroundColor Cyan -NoNewline; Write-Host "View Application Logs" -ForegroundColor White
+        Write-Host "    [8] " -ForegroundColor Yellow -NoNewline; Write-Host "Reset to Defaults" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  NAVIGATION" -ForegroundColor Yellow
+        Write-Host "    [B] " -ForegroundColor DarkGray -NoNewline; Write-Host "Back" -ForegroundColor White
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkCyan
         Write-Host ""
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host "  >> Select option: " -ForegroundColor Cyan -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" {
                 Write-Host ""

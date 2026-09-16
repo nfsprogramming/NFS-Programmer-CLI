@@ -8,22 +8,29 @@ function Show-NetworkDoctor {
         Clear-Host
         Write-Section "NETWORK DOCTOR"
         Write-Host ""
+        Write-Host "  :: NETWORK DOCTOR SUITE" -ForegroundColor Green
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkGreen
         Write-Host "  Diagnose adapter configuration, DNS latency, internet reachability & repair stack." -ForegroundColor DarkGray
         Write-Host ""
 
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkGreen
-        Write-Host "  |  1.  Run Full Network Health Audit                  |" -ForegroundColor Green
-        Write-Host "  |  2.  Test DNS Resolution & Latency (Multi-Host)     |" -ForegroundColor Cyan
-        Write-Host "  |  3.  Ping & Packet Loss Test                        |" -ForegroundColor Cyan
-        Write-Host "  |  4.  Flush DNS Resolver Cache                       |" -ForegroundColor Yellow
-        Write-Host "  |  5.  Renew DHCP Lease (Release & Renew IP)          |" -ForegroundColor Yellow
-        Write-Host "  |  6.  Full Network Stack Reset (Winsock + TCP/IP)    |" -ForegroundColor Red
-        Write-Host "  |  7.  Restart Active Network Adapter                 |" -ForegroundColor Red
-        Write-Host "  |  B.  Back                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkGreen
+        Write-Host "  DIAGNOSTICS & AUDITS" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Green -NoNewline; Write-Host "Run Full Network Health Audit" -ForegroundColor White
+        Write-Host "    [2] " -ForegroundColor Cyan -NoNewline; Write-Host "Test DNS Resolution & Latency (Multi-Host)" -ForegroundColor White
+        Write-Host "    [3] " -ForegroundColor Cyan -NoNewline; Write-Host "Ping & Packet Loss Test" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  REPAIRS & RESET" -ForegroundColor Yellow
+        Write-Host "    [4] " -ForegroundColor Yellow -NoNewline; Write-Host "Flush DNS Resolver Cache" -ForegroundColor White
+        Write-Host "    [5] " -ForegroundColor Yellow -NoNewline; Write-Host "Renew DHCP Lease (Release & Renew IP)" -ForegroundColor White
+        Write-Host "    [6] " -ForegroundColor Red -NoNewline; Write-Host "Full Network Stack Reset (Winsock + TCP/IP)" -ForegroundColor White
+        Write-Host "    [7] " -ForegroundColor Red -NoNewline; Write-Host "Restart Active Network Adapter" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  NAVIGATION" -ForegroundColor Yellow
+        Write-Host "    [B] " -ForegroundColor DarkGray -NoNewline; Write-Host "Back" -ForegroundColor White
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkGreen
         Write-Host ""
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host "  >> Select option: " -ForegroundColor Green -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" { Invoke-NetworkAudit }
             "2" { Test-DNSResolutionLatency }

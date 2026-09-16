@@ -35,17 +35,20 @@ function Show-PerformanceCenter {
         Write-HR "-" 56
         Write-Host ""
 
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkCyan
-        Write-Host "  |  1.  Top Processes by Memory Usage                  |" -ForegroundColor Cyan
-        Write-Host "  |  2.  Top Processes by CPU Usage                     |" -ForegroundColor Cyan
-        Write-Host "  |  3.  Inspect Startup Applications                   |" -ForegroundColor Cyan
-        Write-Host "  |  4.  Find & Terminate Process (Safe Confirmation)   |" -ForegroundColor Yellow
-        Write-Host "  |  5.  Refresh Metrics                                |" -ForegroundColor White
-        Write-Host "  |  B.  Back                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkCyan
+        Write-Host "  MONITORING ACTIONS" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Cyan -NoNewline; Write-Host "Top Processes by Memory Usage" -ForegroundColor White
+        Write-Host "    [2] " -ForegroundColor Cyan -NoNewline; Write-Host "Top Processes by CPU Usage" -ForegroundColor White
+        Write-Host "    [3] " -ForegroundColor Cyan -NoNewline; Write-Host "Inspect Startup Applications" -ForegroundColor White
+        Write-Host "    [4] " -ForegroundColor Yellow -NoNewline; Write-Host "Find & Terminate Process (Safe Confirmation)" -ForegroundColor White
+        Write-Host "    [5] " -ForegroundColor White -NoNewline; Write-Host "Refresh Metrics" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  NAVIGATION" -ForegroundColor Yellow
+        Write-Host "    [B] " -ForegroundColor DarkGray -NoNewline; Write-Host "Back" -ForegroundColor White
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkCyan
         Write-Host ""
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host "  >> Select option: " -ForegroundColor Cyan -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" { Show-TopProcesses -SortBy "WS" }
             "2" { Show-TopProcesses -SortBy "CPU" }

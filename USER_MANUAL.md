@@ -158,26 +158,28 @@ When NFS Programmer CLI starts, it launches the **Extreme Cinematic Boot Sequenc
 After boot, the V2 Welcome Dashboard displays your live system overview:
 
 ```text
-  +==============================================================+
-  |                    NFS PROGRAMMER CLI                        |
-  |                         v2.0.0                               |
-  +--------------------------------------------------------------+
-  |  Welcome back, User @ Hostname
-  |                                                              
-  |  SYSTEM METRICS                                              
-  |  CPU    : 12%          RAM    : 8.2 / 16 GB  DISK  : 45% (C:)
-  |  GPU    : RTX 4070     UPTIME : 1d 4h 22m    STATUS: [✓] Healthy
-  |                                                              
-  |  V2 QUICK ACTIONS                                            
-  |  [1] System Health (Doctor)     [2] Network Doctor           
-  |  [3] Developer Doctor           [4] Cleanup & Maintenance    
-  |  [5] App & Package Manager      [6] Event Logs & Diagnostics 
-  |  [7] Performance Center         [L] Classic V1 Menus         
-  |                                                              
-  |  UTILITIES & CONFIGURATION                                   
-  |  [U] Update & Rollback Center   [S] Settings & Theme         
-  |  [A] About NFS CLI              [Q] Quit                     
-  +==============================================================+
+  ⚡ NFS PROGRAMMER CLI v2.0.0 ── Windows Developer & System Engineering
+  ─────────────────────────────────────────────────────────────────────────────
+  ● Host   : User@Hostname    ● Uptime : 1d 4h 22m    ● Health : Online & Healthy
+
+  LIVE SYSTEM TELEMETRY
+    CPU    [■■······] 12%       RAM    [■■■■····] 8.2 / 16.0 GB (51%)   DISK   [■■■■····] 45% (C:)
+    GPU    NVIDIA GeForce RTX 4070
+
+  DIAGNOSTICS & HEALTH
+    [1] System Health Doctor          [2] Network Doctor Suite
+    [3] Developer Tool Doctor         [4] Cleanup & System Maintenance
+    [6] Event Logs & Diagnostics      [7] Real-Time Performance Center
+
+  PACKAGES & WORKFLOWS
+    [5] Winget Package Studio         [L] Classic V1 Menus (All 12 Modules)
+
+  UTILITIES & CONFIGURATION
+    [U] Update & Rollback Center      [S] Settings & Terminal Theme
+    [A] About NFS CLI                 [Q] Quit
+
+  ─────────────────────────────────────────────────────────────────────────────
+  ⚡ Select option › 
 ```
 
 To select an option, type the corresponding key and press **Enter**.

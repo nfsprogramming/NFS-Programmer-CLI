@@ -111,30 +111,29 @@ function Show-UpdateBanner {
     if (-not $CheckResult -or -not $CheckResult.hasUpdate) { return }
 
     Write-Host ""
-    Write-Host "  +======================================================+" -ForegroundColor Yellow
-    Write-Host "  |                 UPDATE AVAILABLE                     |" -ForegroundColor Yellow
-    Write-Host "  +------------------------------------------------------+" -ForegroundColor DarkYellow
-    Write-Host "  |  Current : v$($CheckResult.currentVersion)" -ForegroundColor White
-    Write-Host "  |  Latest  : v$($CheckResult.latestVersion)" -ForegroundColor Green
-    Write-Host "  |                                                      |" -ForegroundColor DarkYellow
+    Write-Host "  :: UPDATE AVAILABLE" -ForegroundColor Yellow
+    Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkYellow
+    Write-Host "  Installed : v$($CheckResult.currentVersion)   Latest : v$($CheckResult.latestVersion)" -ForegroundColor White
     
     # Show first 3 bullets of notes
     $lines = $CheckResult.releaseNotes -split "`r?`n" | Where-Object { $_ -match "^\s*[-*•]" } | Select-Object -First 3
     if ($lines) {
-        Write-Host "  |  Highlights:" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "  Highlights:" -ForegroundColor Cyan
         foreach ($l in $lines) {
             $trimmed = $l.Trim()
-            if ($trimmed.Length -gt 50) { $trimmed = $trimmed.Substring(0, 47) + "..." }
-            Write-Host "  |    $trimmed" -ForegroundColor Gray
+            if ($trimmed.Length -gt 60) { $trimmed = $trimmed.Substring(0, 57) + "..." }
+            Write-Host "    $trimmed" -ForegroundColor Gray
         }
-        Write-Host "  |                                                      |" -ForegroundColor DarkYellow
     }
 
-    Write-Host "  |  [U] Update Now    [V] View Changes    [S] Skip      |" -ForegroundColor Yellow
-    Write-Host "  +======================================================+" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  [U] Update Now    [V] View Changes    [S] Skip" -ForegroundColor Yellow
+    Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkYellow
     Write-Host ""
 
-    $choice = (Read-Host "  Select update option").Trim().ToUpper()
+    Write-Host "  >> Select update option: " -ForegroundColor Yellow -NoNewline
+    $choice = (Read-Host).Trim().ToUpper()
     if ($choice -eq "U") {
         Invoke-NFSUpdate
     } elseif ($choice -eq "V") {
@@ -334,19 +333,25 @@ function Show-UpdateMenu {
         Write-Section "UPDATE & ROLLBACK CENTER"
         Write-Host ""
         $cur = if ($script:NFS_VERSION_INFO) { $script:NFS_VERSION_INFO.version } else { "2.0.0" }
-        Write-Host "  Current Version : v$cur" -ForegroundColor White
         Write-Host ""
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkYellow
-        Write-Host "  |  1.  Check for Updates (GitHub Releases)            |" -ForegroundColor Cyan
-        Write-Host "  |  2.  Install Latest Version Now                     |" -ForegroundColor Green
-        Write-Host "  |  3.  Rollback to Previous Version                   |" -ForegroundColor Yellow
-        Write-Host "  |  4.  View Full Changelog                            |" -ForegroundColor Cyan
-        Write-Host "  |  5.  View Update Logs                               |" -ForegroundColor DarkGray
-        Write-Host "  |  B.  Back                                           |" -ForegroundColor DarkGray
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkYellow
+        Write-Host "  :: UPDATE & ROLLBACK ENGINE" -ForegroundColor Yellow
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkYellow
+        Write-Host "  Installed Version : v$cur" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  UPDATE ACTIONS" -ForegroundColor Yellow
+        Write-Host "    [1] " -ForegroundColor Cyan -NoNewline; Write-Host "Check for Updates (GitHub Releases)" -ForegroundColor White
+        Write-Host "    [2] " -ForegroundColor Green -NoNewline; Write-Host "Install Latest Version Now" -ForegroundColor White
+        Write-Host "    [3] " -ForegroundColor Yellow -NoNewline; Write-Host "Rollback to Previous Version" -ForegroundColor White
+        Write-Host "    [4] " -ForegroundColor Cyan -NoNewline; Write-Host "View Full Changelog" -ForegroundColor White
+        Write-Host "    [5] " -ForegroundColor DarkGray -NoNewline; Write-Host "View Update Logs" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  NAVIGATION" -ForegroundColor Yellow
+        Write-Host "    [B] " -ForegroundColor DarkGray -NoNewline; Write-Host "Back" -ForegroundColor White
+        Write-Host ("  " + ("=" * 70)) -ForegroundColor DarkYellow
         Write-Host ""
 
-        $choice = (Read-Host "  Select option").Trim().ToUpper()
+        Write-Host "  >> Select option: " -ForegroundColor Yellow -NoNewline
+        $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" {
                 Write-Step "Checking GitHub Releases..."

@@ -185,11 +185,11 @@ function Invoke-CinematicIntro {
         # -------------------------------------------------------------
         Clear-NFSConsole
         Write-Host ""
-        Write-Host "  +-- NFS://CORE ------------------------+  +-- SYSTEM HUD ------------------------+" -ForegroundColor DarkRed
-        Write-Host "  | SESSION : $($snap.SessionId.PadRight(26)) |  | HOST    : $($snap.HostName.PadRight(26)) |" -ForegroundColor White
-        Write-Host "  | ARCH    : $($snap.Arch.PadRight(26)) |  | OS      : $($snap.OS.PadRight(26)) |" -ForegroundColor White
-        Write-Host "  | PS_VER  : $($snap.PSVersion.PadRight(26)) |  | RAM     : $($("$($snap.RAM) GB PHYSICAL").PadRight(26)) |" -ForegroundColor White
-        Write-Host "  +--------------------------------------+  +--------------------------------------+" -ForegroundColor DarkRed
+        Write-Host "  ── NFS://CORE ──────────────────────────  ── SYSTEM HUD ──────────────────────────" -ForegroundColor DarkRed
+        Write-Host "     SESSION : $($snap.SessionId.PadRight(25))    HOST    : $($snap.HostName.PadRight(25))" -ForegroundColor White
+        Write-Host "     ARCH    : $($snap.Arch.PadRight(25))    OS      : $($snap.OS.PadRight(25))" -ForegroundColor White
+        Write-Host "     PS_VER  : $($snap.PSVersion.PadRight(25))    RAM     : $($("$($snap.RAM) GB PHYSICAL").PadRight(25))" -ForegroundColor White
+        Write-Host "  ────────────────────────────────────────  ────────────────────────────────────────" -ForegroundColor DarkRed
         Write-Host ""
 
         # Telemetry progress gauges
@@ -297,12 +297,11 @@ function Invoke-CinematicIntro {
         # -------------------------------------------------------------
         # PHASE 08 & 09: BRAND REVEAL & SYSTEM LOCK (3.0s -> 3.5s)
         # -------------------------------------------------------------
-        Write-Host ""
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkRed
-        Write-Host "  |                 NFS PROGRAMMER CLI                  |" -ForegroundColor White
-        Write-Host "  |         Windows Developer & System Toolkit          |" -ForegroundColor DarkGray
-        Write-Host "  |                    Version $($VersionInfo.version.PadRight(10))       |" -ForegroundColor Red
-        Write-Host "  +-----------------------------------------------------+" -ForegroundColor DarkRed
+        Write-Host "  ─────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkRed
+        Write-Host "  ⚡ NFS PROGRAMMER CLI " -ForegroundColor Red -NoNewline
+        Write-Host "v$($VersionInfo.version) " -ForegroundColor DarkGray -NoNewline
+        Write-Host "── $($VersionInfo.tagline)" -ForegroundColor Gray
+        Write-Host "  ─────────────────────────────────────────────────────────────────────────────" -ForegroundColor DarkRed
         Write-Host ""
         Start-Sleep -Milliseconds ([int](120 * $speed))
         if (& $checkSkip) { return }
