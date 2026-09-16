@@ -6,6 +6,20 @@
 $script:NFS_LATEST_RELEASE = $null
 $script:NFS_LAST_CHECK_RESULT = $null
 
+# Ensure TLS 1.2 is enabled for GitHub requests
+try {
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls12,Tls13'
+} catch {
+    try { [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12 } catch {}
+}
+
+function Write-SafeUpdateLog {
+    param([string]$Message, [string]$Level = "INFO")
+    if (Get-Command Write-NFSLog -ErrorAction SilentlyContinue) {
+        try { Write-NFSLog $Message -Target "update" -Level $Level } catch {}
+    }
+}
+
 function ConvertTo-SemVer {
     param([string]$VersionString)
     # Strip leading 'v' or 'V'
@@ -31,14 +45,21 @@ function Compare-SemVer {
 function Check-NFSUpdate {
     param(
         [switch]$Silent,
-        [int]$TimeoutSec = 2
+        [int]$TimeoutSec = 3
     )
 
-    $verInfo = if ($script:NFS_VERSION_INFO) { $script:NFS_VERSION_INFO } else { Load-NFSVersion }
-    $curVer = $verInfo.version
-    $repo = if ($verInfo.repository) { $verInfo.repository } else { "nfsprogramming/nfs-cli" }
+    $verInfo = if ($script:NFS_VERSION_INFO) {
+        $script:NFS_VERSION_INFO
+    } elseif (Get-Command Load-NFSVersion -ErrorAction SilentlyContinue) {
+        Load-NFSVersion
+    } else {
+        $null
+    }
 
-    Write-NFSLog "Checking for updates against repo $repo (Current: $curVer)..." -Target "update"
+    $curVer = if ($verInfo -and $verInfo.version) { $verInfo.version } else { "2.0.0" }
+    $repo = if ($verInfo -and $verInfo.repository) { $verInfo.repository } else { "nfsprogramming/NFS-Programmer-CLI" }
+
+    Write-SafeUpdateLog "Checking for updates against repo $repo (Current: $curVer)..."
 
     $result = [PSCustomObject]@{
         ok              = $false
@@ -50,14 +71,16 @@ function Check-NFSUpdate {
         message         = ""
     }
 
+    $gotRelease = $false
+
+    # Tier 1: Query GitHub Releases API
     try {
         $apiUrl = "https://api.github.com/repos/$repo/releases/latest"
-        
-        # Fast non-blocking request with timeout
         $req = [System.Net.HttpWebRequest]::Create($apiUrl)
-        $req.Timeout = $TimeoutSec * 1000
+        $req.Timeout = [Math]::Max(3000, $TimeoutSec * 1000)
         $req.UserAgent = "NFS-Programmer-CLI/$curVer"
         $req.Accept = "application/vnd.github.v3+json"
+        $req.AllowAutoRedirect = $true
 
         $resp = $req.GetResponse()
         $reader = [System.IO.StreamReader]::new($resp.GetResponseStream())
@@ -66,40 +89,91 @@ function Check-NFSUpdate {
         $resp.Close()
 
         $release = $content | ConvertFrom-Json
-        $script:NFS_LATEST_RELEASE = $release
+        if ($release -and ($release.tag_name -or $release.name)) {
+            $script:NFS_LATEST_RELEASE = $release
+            $tag = if ($release.tag_name) { $release.tag_name } else { $release.name }
+            $latestVer = ($tag -replace '^[vV]', '').Trim()
 
-        $tag = $release.tag_name
-        if (-not $tag) { $tag = $release.name }
-        $latestVer = ($tag -replace '^[vV]', '').Trim()
+            $cmp = Compare-SemVer $curVer $latestVer
+            $result.ok = $true
+            $result.latestVersion = $latestVer
+            $result.releaseNotes = if ($release.body) { $release.body } else { "Release notes available on GitHub." }
 
-        $cmp = Compare-SemVer $curVer $latestVer
-        $result.ok = $true
-        $result.latestVersion = $latestVer
-        $result.releaseNotes = if ($release.body) { $release.body } else { "No release notes provided." }
-        
-        # Look for zipball or zip asset
-        $zipAsset = $release.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1
-        if ($zipAsset) {
-            $result.downloadUrl = $zipAsset.browser_download_url
-        } elseif ($release.zipball_url) {
-            $result.downloadUrl = $release.zipball_url
-        } else {
-            $result.downloadUrl = "https://github.com/$repo/archive/refs/heads/main.zip"
-        }
+            $zipAsset = $release.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1
+            if ($zipAsset) {
+                $result.downloadUrl = $zipAsset.browser_download_url
+            } elseif ($release.zipball_url) {
+                $result.downloadUrl = $release.zipball_url
+            } else {
+                $result.downloadUrl = "https://github.com/$repo/archive/refs/heads/main.zip"
+            }
 
-        if ($cmp -gt 0) {
-            $result.hasUpdate = $true
-            $result.message = "Update available: v$latestVer"
-            Write-NFSLog "New version found: v$latestVer (Current: v$curVer)" -Target "update"
-        } else {
-            $result.hasUpdate = $false
-            $result.message = "NFS Programmer CLI is up to date"
-            Write-NFSLog "Application is up to date." -Target "update"
+            if ($cmp -gt 0) {
+                $result.hasUpdate = $true
+                $result.message = "Update available: v$latestVer"
+                Write-SafeUpdateLog "New version found: v$latestVer (Current: v$curVer)"
+            } else {
+                $result.hasUpdate = $false
+                $result.message = "NFS Programmer CLI is up to date"
+                Write-SafeUpdateLog "Application is up to date."
+            }
+            $gotRelease = $true
         }
     } catch {
+        # Fallback to Tier 2 manifest check below
+    }
+
+    # Tier 2: Fallback to raw GitHub version.json manifest
+    if (-not $gotRelease) {
+        $rawUrls = @(
+            "https://raw.githubusercontent.com/$repo/main/assets/configs/version.json",
+            "https://raw.githubusercontent.com/nfsprogramming/nfs-cli/main/assets/configs/version.json",
+            "https://raw.githubusercontent.com/nfsprogramming/NFS-Programmer-CLI/main/assets/configs/version.json"
+        )
+
+        foreach ($u in $rawUrls) {
+            try {
+                $wreq = [System.Net.HttpWebRequest]::Create($u)
+                $wreq.Timeout = [Math]::Max(4000, $TimeoutSec * 1000)
+                $wreq.UserAgent = "NFS-Programmer-CLI/$curVer"
+                $wresp = $wreq.GetResponse()
+                $wreader = [System.IO.StreamReader]::new($wresp.GetResponseStream())
+                $rawContent = $wreader.ReadToEnd()
+                $wreader.Close()
+                $wresp.Close()
+
+                if ($rawContent) {
+                    $remoteManifest = $rawContent | ConvertFrom-Json
+                    if ($remoteManifest -and $remoteManifest.version) {
+                        $latestVer = ($remoteManifest.version -replace '^[vV]', '').Trim()
+                        $cmp = Compare-SemVer $curVer $latestVer
+
+                        $result.ok = $true
+                        $result.latestVersion = $latestVer
+                        $result.downloadUrl = "https://github.com/$repo/archive/refs/heads/main.zip"
+                        $result.releaseNotes = "GitHub latest repository build ($latestVer)."
+
+                        if ($cmp -gt 0) {
+                            $result.hasUpdate = $true
+                            $result.message = "Update available: v$latestVer"
+                            Write-SafeUpdateLog "New version found via manifest: v$latestVer (Current: v$curVer)"
+                        } else {
+                            $result.hasUpdate = $false
+                            $result.message = "NFS Programmer CLI is up to date"
+                            Write-SafeUpdateLog "Application is up to date via manifest (v$curVer)."
+                        }
+                        $gotRelease = $true
+                        break
+                    }
+                }
+            } catch {}
+        }
+    }
+
+    if (-not $gotRelease) {
         $result.ok = $false
-        $result.message = "Update check unavailable (Offline)"
-        Write-NFSLog "Update check failed/offline: $($_.Exception.Message)" -Target "update" -Level "WARN"
+        $result.message = "Unable to reach GitHub update server."
+        Write-SafeUpdateLog "Update check failed/offline" -Level "WARN"
     }
 
     $script:NFS_LAST_CHECK_RESULT = $result
@@ -354,16 +428,22 @@ function Show-UpdateMenu {
         $choice = (Read-Host).Trim().ToUpper()
         switch ($choice) {
             "1" {
-                Write-Step "Checking GitHub Releases..."
-                $res = Check-NFSUpdate -TimeoutSec 4
+                Write-Step "Checking GitHub Releases and live manifests..."
+                $res = Check-NFSUpdate -TimeoutSec 5
+                Write-Host ""
                 if ($res.ok) {
+                    Write-Host "  Installed Version : v$($res.currentVersion)" -ForegroundColor White
+                    Write-Host "  Latest Version    : v$($res.latestVersion)" -ForegroundColor Cyan
+                    Write-Host ""
                     if ($res.hasUpdate) {
                         Write-Host "  [!] A newer version is available: v$($res.latestVersion)" -ForegroundColor Green
+                        Write-Host "      Select Option [2] to install this update automatically." -ForegroundColor Yellow
                     } else {
-                        Write-Success "You are running the latest version."
+                        Write-Success "You are running the latest version (v$($res.currentVersion))."
                     }
                 } else {
                     Write-Warn "Unable to reach GitHub update server."
+                    Write-Host "      Tip: Check internet connectivity or try again in a moment." -ForegroundColor DarkGray
                 }
                 Pause-Menu
             }

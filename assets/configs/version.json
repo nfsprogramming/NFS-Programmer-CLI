@@ -4,7 +4,7 @@
   "releaseDate": "2026-09-15",
   "productName": "NFS Programmer CLI",
   "tagline": "Windows Developer & System Engineering Toolkit",
-  "repository": "nfsprogramming/nfs-cli",
+  "repository": "nfsprogramming/NFS-Programmer-CLI",
   "channel": "stable",
   "author": "NIFRAS"
 }
