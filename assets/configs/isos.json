@@ -1,0 +1,79 @@
+{
+  "isos": [
+    {
+      "name": "Windows 11 24H2",
+      "url": "https://archive.org/download/windows-11-24h2-iso_202501/Win11_24H2_English_x64.iso",
+      "notes": "Direct ISO (Archive.org)"
+    },
+    {
+      "name": "Windows 11 (Latest)",
+      "url": "https://www.microsoft.com/software-download/windows11",
+      "notes": "Official Microsoft download page"
+    },
+    {
+      "name": "Win 11 Pro Lite (Ghost Spectre)",
+      "url": "https://download2261.mediafire.com/ieeutkp4t3jgJVASG8cnVXcuYHbdfu26FZ9_U2hyQbYcghuJBGUgF7s2JdM4ftVsrRJqRt5d95MxbDYGadAKArtTy0m6A0JAbStcollJAEjvrSBrZOWRFrc-lA5ESP8goT2rSzokncRdhQkftER-wJ5p6Ztq6iLGdIEhdncQlBMJ/a8zhe3md0all9jh/WIN11.PRO.25H2.U6.X64.WPE.ISO",
+      "notes": "Debloated Performance OS"
+    },
+    {
+      "name": "Windows 10 (Latest)",
+      "url": "https://www.microsoft.com/software-download/windows10",
+      "notes": "Official Microsoft download page"
+    },
+    {
+      "name": "Windows 10 ROG Edition",
+      "url": "https://download1590.mediafire.com/l4gca8d15oeg4U6yi3ohqHXBsJOPbGPfyo5tDxPjfWAlj-aexuPO7k01j_IK-oJ9P2Bzg9fMZ-u0MunOrSD8gOVawkgLJnDj9BEZdmxkMcXlrnJWJzqNJxgGSeZc_0h9I5nOPFazDGeFZ5b2DEzFv0b2CD8b6Vuzf6OE7N_8GN0_/m4ns860r49unht5/Windows+10+ROG+EDITION+v7+%28x64%29+Pre-Activated+2020+%5BFileCR%5D.iso",
+      "notes": "Gaming Themed OS"
+    },
+    {
+      "name": "Hiren's BootCD PE",
+      "url": "https://www.hirensbootcd.org/download/",
+      "notes": "Ultimate IT repair toolkit"
+    },
+    {
+      "name": "Ubuntu 24.04 LTS",
+      "url": "https://ubuntu.com/download/desktop",
+      "notes": "Official Ubuntu release"
+    },
+    {
+      "name": "Linux Mint",
+      "url": "https://linuxmint.com/download.php",
+      "notes": "Great for Windows converts"
+    },
+    {
+      "name": "Pop!_OS",
+      "url": "https://pop.system76.com/",
+      "notes": "Best for NVIDIA/Gaming"
+    },
+    {
+      "name": "Kali Linux",
+      "url": "https://www.kali.org/get-kali/",
+      "notes": "Penetration testing distro"
+    },
+    {
+      "name": "Arch Linux",
+      "url": "https://archlinux.org/download/",
+      "notes": "For the advanced users"
+    },
+    {
+      "name": "Fedora Workstation",
+      "url": "https://fedoraproject.org/workstation/download",
+      "notes": "Cutting edge features"
+    },
+    {
+      "name": "Debian 12",
+      "url": "https://www.debian.org/distrib/",
+      "notes": "The stable foundation"
+    },
+    {
+      "name": "Ventoy (USB Multi-Boot)",
+      "url": "https://github.com/ventoy/Ventoy/releases",
+      "notes": "Boot multiple ISOs from one USB"
+    },
+    {
+      "name": "Rufus (USB Flasher)",
+      "url": "https://rufus.ie/",
+      "notes": "Reliable single-ISO flasher"
+    }
+  ]
+}

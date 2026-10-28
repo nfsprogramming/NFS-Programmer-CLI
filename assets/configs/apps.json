@@ -1,0 +1,80 @@
+{
+  "recommended": [
+    { "name": "Google Chrome",       "id": "Google.Chrome" },
+    { "name": "VLC Media Player",    "id": "VideoLAN.VLC" },
+    { "name": "LocalSend",           "id": "LocalSend.LocalSend" },
+    { "name": "Microsoft 365",       "id": "Microsoft.Office" },
+    { "name": "Python 3",            "id": "Python.Python.3.12" },
+    { "name": "Spotify",             "id": "Spotify.Spotify" },
+    { "name": "IDM",                 "id": "Tonec.InternetDownloadManager" },
+    { "name": "EaseUS Partition",    "url": "https://s1-filecr.xyz/97cfe9a37c1f7d86?ref=93ac8132f60228736d0e6e030a959639" },
+    { "name": "Avast Antivirus",     "url": "https://s1-filecr.xyz/ae8a70ce9aa4bd83?ref=32b1e397964e568543e6aa67730c4126" },
+    { "name": "Adobe Photoshop",     "url": "https://download2449.mediafire.com/cpkp05uac6kgSIyi6RQAswF6PYnzlOFvMcN82fq6k6kbOzMYW9RFDkBxiVVcOvNnp9FvY1Yum-eSJ6ZuBJJ7n7MvThrCbchwIWBcvskbJbbclwS3D2pcTYP52vHssSYILw50gb-LV2dRdFTa-TIf33FDmbjZQdRhAvNPWN4XywTo/6xl0kcgr9xlu7a2/AdobePhotoshop2026v276011.zip" },
+    { "name": "WinRAR",              "id": "RARLab.WinRAR" },
+    { "name": "WhatsApp",            "id": "WhatsApp.WhatsApp" }
+  ],
+  "browsers": [
+    { "name": "Google Chrome",       "id": "Google.Chrome" },
+    { "name": "Mozilla Firefox",     "id": "Mozilla.Firefox" },
+    { "name": "Brave Browser",       "id": "Brave.Brave" },
+    { "name": "Microsoft Edge",      "id": "Microsoft.Edge" },
+    { "name": "Opera GX",            "id": "Opera.OperaGX" },
+    { "name": "Vivaldi",             "id": "VivaldiTechnologies.Vivaldi" }
+  ],
+  "communication": [
+    { "name": "WhatsApp",            "id": "WhatsApp.WhatsApp" },
+    { "name": "Discord",             "id": "Discord.Discord" },
+    { "name": "Telegram",            "id": "Telegram.TelegramDesktop" },
+    { "name": "Zoom",                "id": "Zoom.Zoom" },
+    { "name": "Microsoft Teams",     "id": "Microsoft.Teams" },
+    { "name": "Slack",               "id": "SlackTechnologies.Slack" }
+  ],
+  "media": [
+    { "name": "VLC Media Player",    "id": "VideoLAN.VLC" },
+    { "name": "Spotify",             "id": "Spotify.Spotify" },
+    { "name": "MPV Player",          "id": "mpv-player.mpv" },
+    { "name": "MPC-HC",              "id": "clsid2.mpc-hc" },
+    { "name": "Audacity",            "id": "Audacity.Audacity" },
+    { "name": "OBS Studio",          "id": "OBSProject.OBSStudio" },
+    { "name": "Handbrake",           "id": "HandBrake.HandBrake" }
+  ],
+  "creative": [
+    { "name": "Adobe Photoshop",     "url": "https://download2449.mediafire.com/cpkp05uac6kgSIyi6RQAswF6PYnzlOFvMcN82fq6k6kbOzMYW9RFDkBxiVVcOvNnp9FvY1Yum-eSJ6ZuBJJ7n7MvThrCbchwIWBcvskbJbbclwS3D2pcTYP52vHssSYILw50gb-LV2dRdFTa-TIf33FDmbjZQdRhAvNPWN4XywTo/6xl0kcgr9xlu7a2/AdobePhotoshop2026v276011.zip" },
+    { "name": "Adobe Premiere Pro",  "url": "https://filecr.com/windows/adobe-premiere-pro-0022/?id=141829671000" },
+    { "name": "Adobe After Effects", "url": "https://filecr.com/windows/adobe-after-effects-0025/?id=141830605000" },
+    { "name": "Blender",             "id": "BlenderFoundation.Blender" },
+    { "name": "DaVinci Resolve",     "id": "BlackmagicDesign.DaVinciResolve" }
+  ],
+  "utilities": [
+    { "name": "7-Zip",               "id": "7zip.7zip" },
+    { "name": "WinRAR",              "id": "RARLab.WinRAR" },
+    { "name": "PowerToys",           "id": "Microsoft.PowerToys" },
+    { "name": "BleachBit",           "id": "BleachBit.BleachBit" },
+    { "name": "WizTree",             "id": "AntibodySoftware.WizTree" },
+    { "name": "Rufus",               "id": "Akeo.Rufus" },
+    { "name": "AnyDesk",             "id": "AnyDeskSoftwareGmbH.AnyDesk" },
+    { "name": "Everything Search",   "id": "voidtools.Everything" }
+  ],
+  "cloud": [
+    { "name": "Google Drive",        "id": "Google.GoogleDrive" },
+    { "name": "OneDrive",            "id": "Microsoft.OneDrive" },
+    { "name": "Dropbox",             "id": "Dropbox.Dropbox" },
+    { "name": "Mega Desktop",        "id": "Mega.MEGAsync" }
+  ],
+  "dev": [
+    { "name": "Python 3.12",         "id": "Python.Python.3.12" },
+    { "name": "Node.js LTS",         "id": "OpenJS.NodeJS.LTS" },
+    { "name": "Git",                 "id": "Git.Git" },
+    { "name": "VS Code",             "id": "Microsoft.VisualStudioCode" },
+    { "name": "Docker Desktop",      "id": "Docker.DockerDesktop" },
+    { "name": "Postman",             "id": "Postman.Postman" },
+    { "name": "PowerShell 7",        "id": "Microsoft.PowerShell" }
+  ],
+  "gaming": [
+    { "name": "Steam",               "id": "Valve.Steam" },
+    { "name": "Epic Games Launcher", "id": "EpicGames.EpicGamesLauncher" },
+    { "name": "Ubisoft Connect",     "id": "Ubisoft.Connect" },
+    { "name": "Battle.net",          "id": "Blizzard.BattleNet" },
+    { "name": "GOG Galaxy",          "id": "GOG.Galaxy" }
+  ]
+}

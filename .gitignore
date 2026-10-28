@@ -1,0 +1,61 @@
+# NFS Programmer CLI - .gitignore
+
+# Logs and runtime data
+logs/
+*.log
+assets/logs/
+
+# Temporary and cache files
+*.tmp
+temp_*
+*~
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Executables, binaries and packages
+*.exe
+*.dll
+*.msi
+*.iso
+*.cab
+*.bundle
+myapps/
+
+# Operating System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Editor and IDE files
+.vscode/
+.idea/
+.vs/
+*.sublime-workspace
+*.sublime-project
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+
+# AI Agent & Workspace artifacts
+.gemini/
+/brain/
+/scratch/
+/artifacts/
+.agents/

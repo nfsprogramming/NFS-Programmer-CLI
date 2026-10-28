@@ -1,0 +1,35 @@
+{
+  "websites": [
+    { "name": "Vercel",  "url": "https://vercel.com/dashboard" },
+    { "name": "Render",  "url": "https://dashboard.render.com/" },
+    { "name": "GitHub",     "url": "https://github.com/nfsprogramming" },
+    { "name": "Instagram",  "url": "https://instagram.com/_.nfsphotography._" },
+    { "name": "LinkedIn",   "url": "https://linkedin.com/in/nfs-programming" },
+    { "name": "Netlify",    "url": "https://app.netlify.com/" },
+    { "name": "Supabase","url": "https://supabase.com/dashboard" },
+    { "name": "Firebase","url": "https://console.firebase.google.com/" }
+  ],
+  "tools": [
+    { "name": "ChatGPT",   "url": "https://chat.openai.com" },
+    { "name": "Claude AI", "url": "https://claude.ai" },
+    { "name": "Perplexity","url": "https://www.perplexity.ai" },
+    { "name": "Gemini",    "url": "https://gemini.google.com" },
+    { "name": "Hugging Face","url": "https://huggingface.co/" },
+    { "name": "Canva",     "url": "https://www.canva.com/" },
+    { "name": "Figma",     "url": "https://www.figma.com/" }
+  ],
+  "dev": [
+    { "name": "StackOverflow", "url": "https://stackoverflow.com" },
+    { "name": "MDN Docs",      "url": "https://developer.mozilla.org" },
+    { "name": "DevDocs.io",    "url": "https://devdocs.io" },
+    { "name": "Dev.to",        "url": "https://dev.to" },
+    { "name": "Hashnode",      "url": "https://hashnode.com" },
+    { "name": "Daily.dev",     "url": "https://daily.dev" }
+  ],
+  "downloads": [
+    { "name": "FileHorse",     "url": "https://www.filehorse.com" },
+    { "name": "Softpedia",     "url": "https://www.softpedia.com" },
+    { "name": "Ninite",        "url": "https://ninite.com" },
+    { "name": "MajorGeeks",    "url": "https://www.majorgeeks.com" }
+  ]
+}

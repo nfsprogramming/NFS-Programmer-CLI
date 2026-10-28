@@ -1,0 +1,17 @@
+{
+  "manufacturers": [
+    { "match": "ASUS",    "app": "ASUS.MyASUS",                     "label": "MyASUS" },
+    { "match": "Lenovo",  "app": "Lenovo.LenovoVantage",            "label": "Lenovo Vantage" },
+    { "match": "Dell",    "app": "Dell.DellSupportAssist",          "label": "Dell SupportAssist" },
+    { "match": "HP",      "app": "HP.HPSupportAssistant",           "label": "HP Support Assistant" },
+    { "match": "Acer",    "app": "Acer.AcerCareCenter",             "label": "Acer Care Center" },
+    { "match": "MSI",     "app": "MSI.MSICenter",                   "label": "MSI Center" },
+    { "match": "Samsung", "app": "Samsung.SamsungSettings",         "label": "Samsung Settings" },
+    { "match": "Razer",   "app": "Razer.RazerSynapse",              "label": "Razer Synapse" }
+  ],
+  "gpu": [
+    { "match": "NVIDIA",  "url": "https://www.nvidia.com/en-us/drivers/",                "label": "NVIDIA Driver Downloads" },
+    { "match": "AMD",     "url": "https://www.amd.com/en/support/downloads/drivers.html","label": "AMD Driver Downloads" },
+    { "match": "Intel",   "url": "https://www.intel.com/content/www/us/en/support/detect.html","label": "Intel Driver & Support Assistant" }
+  ]
+}
